@@ -25,8 +25,7 @@
             </div>
         </a>
         <div class="signup_body">
-            <!--<form class="login_form" method='POST' enctype="multipart/form-data"> -->
-                <form class="login_form" method="POST" action="{% url 'login' %}"> <!---</form>-->
+                <form class="login_form" method="POST" action="{% url 'login' %}">
                 {% csrf_token %}
                 <label for="login-username" class="label">
                     Email address or username
@@ -37,11 +36,16 @@
                     Password
                 </label>
                 <input type="password" class="form_input" name="password" placeholder="Password" required>
-                {% if not case %}
-                <span style="color:#f79862;
-                             padding-bottom:20px;
-                             text-align:center;">Username or password invalid</span>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div style="background-color:#ffefef; border:1px solid #ff6b6b; padding:10px; margin-bottom:15px; border-radius:8px; text-align:center; color:#b00020;">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
                 {% endif %}
+                <p class="label center-align">
+                    <a href="{% url 'password_reset' %}">Forgot your password?</a>
+                </p>
                 <button class='btn btn_log_in' type="submit">Log in</button>
                 <div class="divider"></div>
                 <p class='label center-align'>Don't have an account?</p>

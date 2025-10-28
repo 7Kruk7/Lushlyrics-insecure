@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <body style="font-family:Arial, sans-serif; color:#333;">
+    <h2>Hello from <span style="color:#ff6b6b;">Youttify</span> 🎧</h2>
+    <p>We received a request to reset your password. You can set a new one by clicking the button below:</p>
+
+    <p style="margin: 30px 0;">
+      <a href="{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}"
+         style="background-color:#ff6b6b; color:white; padding:12px 20px; border-radius:8px; text-decoration:none;">
+        Reset My Password
+      </a>
+    </p>
+
+    <p>If you didn’t request this, please ignore this message — your password will stay safe and unchanged.</p>
+
+    <p style="margin-top:40px;">Best regards,<br>The Youttify Team 🎶</p>
+  </body>
+</html>

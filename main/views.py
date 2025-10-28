@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.forms import UserCreationForm
 from youtube_search import YoutubeSearch
 import json
+from django.contrib import messages
 # import cardupdate
 
 
@@ -74,34 +75,62 @@ def add_playlist(request):
         song_albumsrc = song__albumsrc,
         song_channel=request.POST['channel'], song_date_added=request.POST['date'],song_youtube_id=request.POST['songid'])
 
-def registration(request):
+
+def registration(request): #added -> start
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.email = request.POST.get('email')
-            user.save()
-            playlist_user.objects.create(username=user)
-            return redirect('login')
-        else:
-            print(form.errors)
-    else:
-        form = UserCreationForm()  # Create empty form for GET requests
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+
+        # error flags
+        username_exists = False
+        email_exists = False
+        password_mismatch = False
+
+        if User.objects.filter(username=username).exists():
+            username_exists = True
+
+        if User.objects.filter(email=email).exists():
+            email_exists = True
+
+        if password1 != password2:
+            password_mismatch = True
+
+        if username_exists or email_exists or password_mismatch:
+            return render(request, 'signup.html', {
+                'username_exists': username_exists,
+                'email_exists': email_exists,
+                'password_mismatch': password_mismatch,
+            })
+        
+        user = User.objects.create_user(username=username, email=email, password=password1)
+        user.save()
+        return redirect('login')
     
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'signup.html')
 
 def user_login(request):
     if request.method == 'POST':
-        username = request.POST['username']
+        username_or_email = request.POST['username']
         password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=username_or_email, password=password)
         if user is not None:
             login(request, user)
             return redirect('/')
         else:
-            return render(request, 'login.html', {'case': True}) 
+            messages.error(request,"Invalid email or password.")
+            return render(request, 'login.html')
+            #return render(request, 'login.html', {'login_error': True}) 
     return render(request, 'login.html')
 
 def user_logout(request):
     logout(request)
-    return redirect('login') # <- added end
+    return redirect('login/') # <- added end
+
+'''
+comming soon
+
+def home(request):
+    return render(request, 'home.html')
+'''

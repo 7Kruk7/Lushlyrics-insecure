@@ -7,16 +7,11 @@ class playlist_user(models.Model):
     username = models.OneToOneField(User, on_delete=models.CASCADE)
     favorite_genre = models.CharField(max_length=100, default='Pop', blank=True)
 
-    '''
-    def __str__(self):
-        return f'Username = {self.username}, Liked Songs = {list(self.playlist_song_set.all())}'
-    '''
-
-    def __str__(self):
+    def __str__(self): # changed start ->
         return f'{self.username.username}'  # safe for admin and creation
 
     def liked_songs(self):
-        return list(self.playlist_song_set.all())
+        return list(self.playlist_song_set.all()) # <- changed end
 
 class playlist_song(models.Model):
     user = models.ForeignKey(playlist_user, on_delete=models.CASCADE)
