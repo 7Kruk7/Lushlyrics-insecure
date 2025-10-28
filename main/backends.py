@@ -1,4 +1,4 @@
-from django.contrib.auth.backends import ModelBackend
+from django.contrib.auth.backends import ModelBackend # added start->
 from django.contrib.auth.models import User
 
 class EmailOrUsernameBackend(ModelBackend):
@@ -18,4 +18,4 @@ class EmailOrUsernameBackend(ModelBackend):
 
         if user.check_password(password):
             return user
-        return None
+        return None# <- added end
